@@ -13,7 +13,13 @@ func main() {
 		log.Fatal(err)
 	}
 	// avvia il server HTTPS
-	if e := t.StartServer(mux, 8080); e != nil {
+	config := ssc.TrustConfig{
+			Port:         8080,
+			ReadTimeout:  5 * time.Second,
+			WriteTimeout: 10 * time.Second,
+			IdleTimeout:  120 * time.Second,
+		}
+	if e := t.StartServer(mux, config); e != nil {
 		log.Fatal(e)
 	}
 }

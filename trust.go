@@ -18,6 +18,14 @@ type Trust struct {
 	ClientAuth tls.ClientAuthType
 }
 
+// TrustConfig raccoglie le configurazioni del server HTTPS
+type TrustConfig struct {
+	Port         int
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
+	IdleTimeout  time.Duration
+}
+
 // NewTrust crea un nuovo trust a partire dai certificati passati come argomento
 func NewTrust(certificate, key, ca string, auth tls.ClientAuthType) (*Trust, error) {
 	root, err := os.ReadFile(ca)
@@ -51,12 +59,24 @@ func (t *Trust) Client(timeout time.Duration) *http.Client {
 }
 
 // StartServer avvia un server HTTPS configurato per gestire le richieste definite dal Trust
-func (t *Trust) StartServer(h http.Handler, port int) error {
+func (t *Trust) StartServer(h http.Handler, c TrustConfig) error {
+	if c.Port == 0 {
+		c.Port = 8080
+	}
+	if c.ReadTimeout == 0 {
+		c.ReadTimeout = 10 * time.Second
+	}
+	if c.WriteTimeout == 0 {
+		c.WriteTimeout = 10 * time.Second
+	}
+	if c.IdleTimeout == 0 {
+		c.IdleTimeout = 30 * time.Second
+	}
 	server := &http.Server{
-		Addr:         fmt.Sprintf(":%d", port),
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		IdleTimeout:  30 * time.Second,
+		Addr:         fmt.Sprintf(":%d", c.Port),
+		ReadTimeout:  c.ReadTimeout,
+		WriteTimeout: c.WriteTimeout,
+		IdleTimeout:  c.IdleTimeout,
 		Handler:      h,
 		TLSConfig: &tls.Config{
 			MinVersion: tls.VersionTLS12,
