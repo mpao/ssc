@@ -18,8 +18,8 @@ type Trust struct {
 	ClientAuth tls.ClientAuthType
 }
 
-// TrustConfig raccoglie le configurazioni del server HTTPS
-type TrustConfig struct {
+// ServerConfig raccoglie le configurazioni del server HTTPS
+type ServerConfig struct {
 	Port         int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
@@ -59,7 +59,7 @@ func (t *Trust) Client(timeout time.Duration) *http.Client {
 }
 
 // StartServer avvia un server HTTPS configurato per gestire le richieste definite dal Trust
-func (t *Trust) StartServer(h http.Handler, c TrustConfig) error {
+func (t *Trust) StartServer(h http.Handler, c ServerConfig) error {
 	if c.Port == 0 {
 		c.Port = 8080
 	}

@@ -13,7 +13,7 @@ func main() {
 		log.Fatal(err)
 	}
 	// avvia il server HTTPS
-	config := ssc.TrustConfig{
+	config := ssc.ServerConfig{
 			Port:         8080,
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: 10 * time.Second,

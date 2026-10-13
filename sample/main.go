@@ -21,7 +21,7 @@ func main() {
 	})
 	go func() {
 		log.Println("server started at port 8080")
-		config := ssc.TrustConfig{
+		config := ssc.ServerConfig{
 			Port:         8080,
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: 10 * time.Second,
