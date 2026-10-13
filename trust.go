@@ -63,15 +63,6 @@ func (t *Trust) StartServer(h http.Handler, c ServerConfig) error {
 	if c.Port == 0 {
 		c.Port = 8080
 	}
-	if c.ReadTimeout == 0 {
-		c.ReadTimeout = 10 * time.Second
-	}
-	if c.WriteTimeout == 0 {
-		c.WriteTimeout = 10 * time.Second
-	}
-	if c.IdleTimeout == 0 {
-		c.IdleTimeout = 30 * time.Second
-	}
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", c.Port),
 		ReadTimeout:  c.ReadTimeout,
